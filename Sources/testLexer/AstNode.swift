@@ -21,11 +21,11 @@ public class AstNode {
         self.token = token
     }
     
-    func tokenType() -> TokenType {
+    public func tokenType() -> TokenType {
         return token.type
     }
     
-    func content() -> String {
+    public func content() -> String {
         return token.content
     }
     

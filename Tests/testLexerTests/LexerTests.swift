@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import testLexer
 
 class LexerTests: XCTestCase {
     

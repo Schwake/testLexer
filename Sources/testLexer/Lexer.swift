@@ -14,7 +14,7 @@ public final class Lexer {
     public var tokens: [Token]
     
     // We only need the string that is to be analyzed
-    init(source: String) {
+    public init(source: String) {
         self.source = source
         self.tokens = []
         self.scan(source: source)

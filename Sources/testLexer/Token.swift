@@ -13,8 +13,8 @@ public struct Token {
     let opOr = "\u{2228}"
     let opNot = "\u{00AC}"
 
-    let type: TokenType
-    let content: String
+    public let type: TokenType
+    public let content: String
     
     init(from: String) {
         self.content = from
