@@ -71,6 +71,6 @@ public final class Lexer {
         let token = Token(from: named)
         return token
     }
-    
+
     
 }

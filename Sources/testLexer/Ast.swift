@@ -14,22 +14,32 @@ public final class Ast {
     
     public init(lexer: Lexer) {
         self.lexer = lexer
+        self.populate()
     }
 
-    public func populateAst() {
-//        var started = false
-//        
-//        for token in lexer.tokens {
-//            if !started {
-//                started = true
-//                var currAstNode = AstNode(token: token)
-//                currAstNode = currAstNode.next()
-//            } else {
-//                
-//            }
-//        }
+    public func populate() {
+        var started = false
+        var currNode: AstNode?
         
+        for token in lexer.tokens {
+            if !started {
+                started = true
+                rootNode = AstNode(token: token)
+                currNode = rootNode!
+            } else {
+                currNode = currNode!.add(token: token)
+            }
+        }
     }
     
-    
+    public func toString() -> String {
+        var answer = ""
+        
+        if let rootNode = rootNode {
+            answer = rootNode.contentTo(string: answer)
+        }
+     
+        return answer
+    }
+  
 }

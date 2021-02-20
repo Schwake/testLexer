@@ -80,4 +80,21 @@ class LexerTests: XCTestCase {
         print(opOr)
         print(opNot)
     }
+    
+    func testAstCreation() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        // not ((not(x or not y) and z) or x)
+        let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+ 
+        print("Lexer Source")
+        print(lexer.source)
+    
+        let ast = Ast(lexer: lexer)
+        //let aString = ast.toString()
+        
+    }
 }

@@ -29,6 +29,42 @@ public class AstNode {
         return token.content
     }
     
+    public func add(token: Token) -> AstNode {
+        
+        if (isLParen() || isNot()) {
+            bottom = AstNode(token: token)
+            bottom!.top = self
+            return bottom!
+        } else {
+            if (isText() || isOperation()) {
+                succ = AstNode(token: token)
+                succ!.pre = self
+                return succ!
+            } else {
+                // can only be rParen
+                var previous = prevLParen()
+                if previous.hasTopNot() {
+                    previous = previous.top!
+                }
+                previous.succ = AstNode(token: token)
+                previous.succ!.pre = self
+                return previous.succ!
+            }
+        }
+    }
+    
+    public func prevLParen() -> AstNode {
+        if isLParen() {
+            if hasTopNot() {
+                return top!.prevLParen()
+            }
+            return self
+        } else {
+            return pre!.prevLParen()
+        }
+        
+    }
+    
     public func isLParen() -> Bool {
         return tokenType() == .leftParen
     }
@@ -37,9 +73,43 @@ public class AstNode {
         return tokenType() == .rightParen
     }
     
-    public func isNegation() -> Bool {
+    public func isNot() -> Bool {
         return tokenType() == .not
     }
+    
+    public func isText() -> Bool {
+        return tokenType() == .text
+    }
+    
+    public func isOperation() -> Bool {
+        return tokenType() == .op
+    }
+    
+    public func hasTopNot() -> Bool {
+        if let top = top {
+            if top.isNot() {
+                return true
+            } else {
+                return false
+            }
+        }
+        return false
+    }
+    
+    public func contentTo(string: String) -> String {
+        var answer = string
+        
+        if let bottom = bottom {
+            answer = bottom.contentTo(string: answer)
+        }
+        
+        if let succ = succ {
+            answer = succ.contentTo(string: answer)
+        }
+        
+        return answer
+    }
+    
     
     
 }
