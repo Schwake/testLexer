@@ -31,6 +31,7 @@ public class AstNode {
     
     public func add(token: Token) -> AstNode {
         
+        // All other tokens are handled by the ast node
         if (isLParen() || isNot()) {
             bottom = AstNode(token: token)
             bottom!.top = self
@@ -40,27 +41,24 @@ public class AstNode {
                 succ = AstNode(token: token)
                 succ!.pre = self
                 return succ!
-            } else {
-                // can only be rParen
-                var previous = prevLParen()
-                if previous.hasTopNot() {
-                    previous = previous.top!
-                }
-                previous.succ = AstNode(token: token)
-                previous.succ!.pre = self
-                return previous.succ!
             }
         }
+        // This should never happen: Make it crash
+        return AstNode(token: token)
     }
     
     public func prevLParen() -> AstNode {
         if isLParen() {
             if hasTopNot() {
-                return top!.prevLParen()
+                return top!
             }
             return self
         } else {
-            return pre!.prevLParen()
+            if hasTop() {
+                return top!.prevLParen()
+            } else {
+                return pre!.prevLParen()
+            }
         }
         
     }
@@ -86,8 +84,8 @@ public class AstNode {
     }
     
     public func hasTopNot() -> Bool {
-        if let top = top {
-            if top.isNot() {
+        if  hasTop() {
+            if top!.isNot() {
                 return true
             } else {
                 return false
@@ -96,11 +94,18 @@ public class AstNode {
         return false
     }
     
+    public func hasTop() -> Bool {
+        return top != nil
+    }
+    
     public func contentTo(string: String) -> String {
         var answer = string
         
+        answer = answer + content()
+        
         if let bottom = bottom {
             answer = bottom.contentTo(string: answer)
+            if isLParen() { answer = answer + ")" }
         }
         
         if let succ = succ {

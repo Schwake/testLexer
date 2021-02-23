@@ -81,20 +81,23 @@ class LexerTests: XCTestCase {
         print(opNot)
     }
     
+    // Check that a term constructed from ast equals the lexer's source
+    // Spaces are removed to allow for comparison
     func testAstCreation() {
         
         let opAnd = "\u{2227}"
         let opOr = "\u{2228}"
         let opNot = "\u{00AC}"
+        
         // not ((not(x or not y) and z) or x)
         let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
         let lexer = Lexer(source: source)
- 
-        print("Lexer Source")
-        print(lexer.source)
+        let sourceCompressed = lexer.source.filter{ $0 != " "}
     
         let ast = Ast(lexer: lexer)
-        //let aString = ast.toString()
+        let astCompressed = ast.toString()
+       
+        XCTAssertEqual(sourceCompressed, astCompressed)
         
     }
 }

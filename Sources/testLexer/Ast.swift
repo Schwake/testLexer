@@ -20,6 +20,7 @@ public final class Ast {
     public func populate() {
         var started = false
         var currNode: AstNode?
+        var rParenFound = false
         
         for token in lexer.tokens {
             if !started {
@@ -27,7 +28,20 @@ public final class Ast {
                 rootNode = AstNode(token: token)
                 currNode = rootNode!
             } else {
-                currNode = currNode!.add(token: token)
+                if token.type == .rightParen {
+                    rParenFound = true
+                } else {
+                    if rParenFound {
+                        rParenFound = false
+                        currNode = currNode?.prevLParen()
+                        let aNode = AstNode(token: token)
+                        currNode!.succ = aNode
+                        aNode.pre = currNode
+                        currNode = aNode
+                    } else {
+                        currNode = currNode!.add(token: token)
+                    }
+                }
             }
         }
     }
