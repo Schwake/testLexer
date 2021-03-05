@@ -120,4 +120,25 @@ class LexerTests: XCTestCase {
         XCTAssertEqual(sourceCompressed, astCompressed)
         
     }
+    
+    
+    func testLexerAstCheckParenSimple() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+    
+        // not ((not(x or not y) and z) or x) or x and ((x) or y) and (x or ( y and x )))
+        let source = "((((x) "  + opOr + " y)" + opOr + " z))"
+        let lexer = Lexer(source: source)
+        let sourceCompressed = lexer.source.filter{ $0 != " "}
+    
+        let ast = Ast(lexer: lexer)
+        let astCompressed = ast.toString()
+        print(sourceCompressed)
+        print(astCompressed)
+       
+        XCTAssertEqual(sourceCompressed, astCompressed)
+        
+    }
 }
