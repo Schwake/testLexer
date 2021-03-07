@@ -137,7 +137,9 @@ class LexerTests: XCTestCase {
         let astCompressed = ast.toString()
         print(sourceCompressed)
         print(astCompressed)
-       
+        
+        ast.printStructure()
+        
         XCTAssertEqual(sourceCompressed, astCompressed)
         
     }

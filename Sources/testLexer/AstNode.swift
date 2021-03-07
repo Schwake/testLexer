@@ -98,23 +98,50 @@ public class AstNode {
         return top != nil
     }
     
+    
+    public func hasBottom() -> Bool {
+        return bottom != nil
+    }
+    
+    
+    public func hasSucc() -> Bool {
+        return succ != nil
+    }
+    
+    
     public func contentTo(string: String) -> String {
         var answer = string
         
         answer = answer + content()
         
-        if let bottom = bottom {
-            answer = bottom.contentTo(string: answer)
+        if hasBottom() {
+            answer = bottom!.contentTo(string: answer)
             if isLParen() { answer = answer + ")" }
         }
         
-        if let succ = succ {
-            answer = succ.contentTo(string: answer)
+        if hasSucc() {
+            answer = succ!.contentTo(string: answer)
         }
         
         return answer
     }
     
+    
+    public func printStructure(string: String, index: Int) {
+
+        let index = index + 1
+        let string = string
+        
+        print("\(string) \(index) \(content())")
+        
+        if hasSucc() {
+            succ!.printStructure(string: " succ ", index: index)
+        }
+        
+        if hasBottom() {
+            bottom!.printStructure(string: " bott ", index: index)
+        }
+    }
     
     
 }

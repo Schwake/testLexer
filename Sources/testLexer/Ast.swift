@@ -55,5 +55,12 @@ public final class Ast {
      
         return answer
     }
+    
+    public func printStructure() {
+        
+        if let rootNode = rootNode {
+            rootNode.printStructure(string: "", index: 0)
+        }
+    }
   
 }
