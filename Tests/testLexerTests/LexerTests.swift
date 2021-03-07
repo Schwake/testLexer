@@ -108,7 +108,7 @@ class LexerTests: XCTestCase {
         let opNot = "\u{00AC}"
     
         // not ((not(x or not y) and z) or x) or x and ((x) or y) and (x or ( y and x )))
-        let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)" + opOr + " x " + opAnd + " ((x) " + opOr + " y)" + "(x " + opOr + "(y " + opAnd + " x)))"
+        let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)" + opOr + " x " + opAnd + " ((x) " + opOr + " y)" + "(x " + opOr + "(y " + opAnd + " x))"
         let lexer = Lexer(source: source)
         let sourceCompressed = lexer.source.filter{ $0 != " "}
     
@@ -138,7 +138,7 @@ class LexerTests: XCTestCase {
         print(sourceCompressed)
         print(astCompressed)
         
-        ast.printStructure()
+        //ast.printStructure()
         
         XCTAssertEqual(sourceCompressed, astCompressed)
         

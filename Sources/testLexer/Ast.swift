@@ -33,7 +33,7 @@ public final class Ast {
                 } else {
                     if rParenFound {
                         rParenFound = false
-                        currNode = currNode?.prevLParen()
+                        currNode = currNode?.prevLParen(fromSucc: false)
                         let aNode = AstNode(token: token)
                         currNode!.succ = aNode
                         aNode.pre = currNode

@@ -47,20 +47,23 @@ public class AstNode {
         return AstNode(token: token)
     }
     
-    public func prevLParen() -> AstNode {
-        if isLParen() {
-            if hasTopNot() {
-                return top!
-            }
-            return self
+    public func prevLParen(fromSucc: Bool) -> AstNode {
+        if (fromSucc && isLParen()) {
+                return top!.prevLParen(fromSucc: false)
         } else {
-            if hasTop() {
-                return top!.prevLParen()
+            if isLParen() {
+                if hasTopNot() {
+                    return top!
+                }
+                return self
             } else {
-                return pre!.prevLParen()
+                if hasTop() {
+                    return top!.prevLParen(fromSucc: false)
+                } else {
+                    return pre!.prevLParen(fromSucc: true)
+                }
             }
         }
-        
     }
     
     public func isLParen() -> Bool {
