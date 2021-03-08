@@ -72,5 +72,28 @@ public final class Lexer {
         return token
     }
 
+    public func checkParenCount() -> Bool {
+        
+        let lParenCount = source.filter{ $0 == "("}.count
+        let rParenCount = source.filter{ $0 == ")"}.count
+        
+        return lParenCount == rParenCount
+    }
+    
+    public func checkParenRAppearance() -> Bool {
+        
+        var lParCount = 0
+        var rParCount = 0
+        var checkOK = true
+        
+        for item in source {
+            if item == "(" { lParCount = lParCount + 1 }
+            if item == ")" { rParCount = rParCount + 1 }
+            
+            if rParCount > lParCount { checkOK = false }
+        }
+        
+        return checkOK
+    }
     
 }

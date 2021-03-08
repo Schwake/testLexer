@@ -81,6 +81,55 @@ class LexerTests: XCTestCase {
         print(opNot)
     }
     
+    
+    func testLexerParenLRCount() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        // not ((not(x or not y) and z) or x)
+        let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+        
+        let checkOk = lexer.checkParenCount()
+        
+        XCTAssertTrue(checkOk)
+    }
+    
+    func testLexerParenCountFalse() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        // not (not(x or not y) and z) or x)
+        let source = opNot + "( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+        
+        let checkOk = lexer.checkParenCount()
+        
+        XCTAssertFalse(checkOk)
+    }
+    
+    func testLexerParenRAppearance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        // not (not(x or not y) and z) or x)
+        let source = opNot + "( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+        
+        let checkOk = lexer.checkParenRAppearance()
+        
+        XCTAssertFalse(checkOk)
+        
+    }
+    
+    
+    
     // Check that a term constructed from ast equals the lexer's source
     // Spaces are removed to allow for comparison
     func testAstCreation() {
@@ -101,7 +150,7 @@ class LexerTests: XCTestCase {
         
     }
     
-    func testLexerAstCheck() {
+    func testAstCheck() {
         
         let opAnd = "\u{2227}"
         let opOr = "\u{2228}"
@@ -122,7 +171,7 @@ class LexerTests: XCTestCase {
     }
     
     
-    func testLexerAstCheckParenSimple() {
+    func testAstCheckParenSimple() {
         
         let opAnd = "\u{2227}"
         let opOr = "\u{2228}"
@@ -142,5 +191,62 @@ class LexerTests: XCTestCase {
         
         XCTAssertEqual(sourceCompressed, astCompressed)
         
+    }
+    
+    func testSourceCreationPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        let n = 10000
+        var source = ""
+        
+        measure {
+            for index in (1...n) {
+                source = source + (" (X\(index) \(opOr) y\(index) ) \(opAnd)")
+            }
+        }
+    }
+    
+    func testLexerPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        let n = 20000
+        var source = ""
+        
+        for index in (1...n) {
+            source = source + (" (X\(index) \(opOr) y\(index) ) \(opAnd)")
+        }
+        
+        source = source + " z"
+
+        measure {
+            let lexer = Lexer(source: source)
+        }
+    }
+    
+    func testAstPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        let n = 20000
+        var source = ""
+        
+        for index in (1...n) {
+            source = source + (" (X\(index) \(opOr) y\(index) ) \(opAnd)")
+        }
+        
+        source = source + " z"
+        let lexer = Lexer(source: source)
+        
+        measure {
+            Ast(lexer: lexer)
+        }
     }
 }
