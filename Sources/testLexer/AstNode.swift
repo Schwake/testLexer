@@ -146,5 +146,39 @@ public class AstNode {
         }
     }
     
+    public func collectVariables(names: inout [String]) -> [String] {
+        
+        if isText() {
+            names.append(content())
+        }
+        
+        if hasSucc() {
+            succ!.collectVariables(names: &names)
+        }
+        
+        if hasBottom() {
+            bottom!.collectVariables(names: &names)
+        }
     
+        return names
+    }
+    
+    
+    public func collectVariablesSet(names: Set<String>) -> Set<String> {
+        var answer = names
+        
+        if isText() {
+            answer.insert(content())
+        }
+        
+        if hasSucc() {
+            answer = answer.union(succ!.collectVariablesSet(names: answer))
+        }
+        
+        if hasBottom() {
+           answer =  answer.union(bottom!.collectVariablesSet(names: answer))
+        }
+    
+        return answer
+    }
 }

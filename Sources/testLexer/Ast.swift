@@ -12,11 +12,13 @@ public final class Ast {
     var rootNode: AstNode?
     let lexer: Lexer
     
+    
     public init(lexer: Lexer) {
         self.lexer = lexer
         self.populate()
     }
 
+    
     public func populate() {
         var started = false
         var currNode: AstNode?
@@ -46,6 +48,48 @@ public final class Ast {
         }
     }
     
+    
+    public func collectVariables() -> [String:Int] {
+  
+        var answer = [String:Int]()
+        var variableNames = [String]()
+        
+        if let rootNode = rootNode {
+            rootNode.collectVariables(names: &variableNames)
+        }
+        
+        let sortedNames = Array(Set(variableNames)).sorted()
+        
+        for (index, value) in sortedNames.enumerated() {
+            let orderIndex = index + 1
+            answer[value] = orderIndex
+        }
+        
+        return answer
+    }
+    
+    
+    
+    public func collectVariablesSet() -> [String:Int] {
+  
+        var answer = [String:Int]()
+        var namesSet = Set<String>()
+        var sortedNames: [String]
+        
+        if let rootNode = rootNode {
+            namesSet = rootNode.collectVariablesSet(names: namesSet)
+        }
+        
+        sortedNames = Array(namesSet).sorted()
+        
+        for (index, value) in sortedNames.enumerated() {
+            let orderIndex = index + 1
+            answer[value] = orderIndex
+        }
+        
+        return answer
+    }
+    
     public func toString() -> String {
         var answer = ""
         
@@ -55,6 +99,7 @@ public final class Ast {
      
         return answer
     }
+    
     
     public func printStructure() {
         

@@ -45,6 +45,32 @@ class LexerPerformanceTests: XCTestCase {
         }
     }
     
+    func testAstOrderDictPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        
+        // (Xn OR Yn) AND
+        let term = (" (X1 \(opOr) Y1) \(opAnd)")
+        let n = 10000
+        var source = ""
+        
+        for _ in (1...n) {
+            source += term
+        }
+        source += " z"
+        
+        let lexer = Lexer(source: source)
+        let ast = Ast(lexer: lexer)
+        
+        measure {
+            ast.collectVariablesSet()
+            // Inout variant - double speed
+            // ast.collectVariables()
+        }
+    }
+    
+    
     func testAstPerformance() {
         
         let opAnd = "\u{2227}"

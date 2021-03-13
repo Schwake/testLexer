@@ -177,7 +177,7 @@ class LexerTests: XCTestCase {
         let opOr = "\u{2228}"
         let opNot = "\u{00AC}"
     
-        // not ((not(x or not y) and z) or x) or x and ((x) or y) and (x or ( y and x )))
+        // ((((X) OR Y) OR Z))
         let source = "((((x) "  + opOr + " y)" + opOr + " z))"
         let lexer = Lexer(source: source)
         let sourceCompressed = lexer.source.filter{ $0 != " "}
@@ -190,6 +190,26 @@ class LexerTests: XCTestCase {
         //ast.printStructure()
         
         XCTAssertEqual(sourceCompressed, astCompressed)
+        
+    }
+    
+    
+    public func testAstCollectVariables() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+    
+        // not ((not(x1 or not y1) and z1) or x2) or x1 and ((x3) or y2) and (x1 or ( y1 and x3 )))
+        let source = opNot + "(( " + opNot + "(x1 " + opOr + opNot + " y1) " + opAnd + " z1)" + opOr + " x2)" + opOr + " x1 " + opAnd + " ((x3) " + opOr + " y2)" + "(x1 " + opOr + "(y1 " + opAnd + " x3))"
+        
+        let lexer = Lexer(source: source)
+        let ast = Ast(lexer: lexer)
+        
+        let orderedVariables = ast.collectVariables()
+        let expectedOrderedVariables = ["x1":1, "x2":2, "x3":3,"y1":4, "y2":5, "z1":6]
+        
+        XCTAssert(orderedVariables == expectedOrderedVariables)
         
     }
 
