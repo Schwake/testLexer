@@ -129,6 +129,36 @@ class LexerTests: XCTestCase {
     }
     
     
+    public func testLexerVariableOrdering() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        // not (not(x or not y) and z) or x)
+        let source = opNot + "( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+        
+        let expectedOrdering: [String:Int] = ["x": 1, "y": 2, "z": 3]
+        let variableOrdering = lexer.variableOrdering()
+    
+        XCTAssertTrue(expectedOrdering == variableOrdering)
+    }
+    
+    public func testLexerCheckOrdering() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        let opNot = "\u{00AC}"
+        
+        // not ((not(x or not y) and z) or x)
+        let source = opNot + "(( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        let lexer = Lexer(source: source)
+        
+        XCTAssertTrue(lexer.checkOrdering())
+        
+    }
+    
     
     // Check that a term constructed from ast equals the lexer's source
     // Spaces are removed to allow for comparison
@@ -173,9 +203,7 @@ class LexerTests: XCTestCase {
     
     func testAstCheckParenSimple() {
         
-        let opAnd = "\u{2227}"
         let opOr = "\u{2228}"
-        let opNot = "\u{00AC}"
     
         // ((((X) OR Y) OR Z))
         let source = "((((x) "  + opOr + " y)" + opOr + " z))"

@@ -45,6 +45,28 @@ class LexerPerformanceTests: XCTestCase {
         }
     }
     
+    func testLexerVariableOrderingPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        
+        // (Xn OR Yn) AND
+        let term = (" (X1 \(opOr) Y1) \(opAnd)")
+        let n = 1000000
+        var source = ""
+        
+        for _ in (1...n) {
+            source += term
+        }
+        source += " z"
+        
+        let lexer = Lexer(source: source)
+        
+        measure {
+            lexer.variableOrdering()
+        }
+    }
+
     func testAstOrderDictPerformance() {
         
         let opAnd = "\u{2227}"
@@ -69,7 +91,7 @@ class LexerPerformanceTests: XCTestCase {
             // ast.collectVariables()
         }
     }
-    
+
     
     func testAstPerformance() {
         

@@ -12,11 +12,22 @@ public final class Lexer {
     // Basic variables
     public let source: String
     public var tokens: [Token]
+    public var orderDict: [String: Int]
     
     // We only need the string that is to be analyzed
     public init(source: String) {
         self.source = source
-        self.tokens = []
+        self.orderDict = [String:Int]()
+        self.tokens = [Token]()
+        self.scan(source: source)
+        self.orderDict = variableOrdering()
+    }
+    
+    // Here, string and variable ordering are given
+    public init(source: String, ordering: [String:Int]) {
+        self.source = source
+        self.orderDict = ordering
+        self.tokens = [Token]()
         self.scan(source: source)
     }
     
@@ -94,6 +105,55 @@ public final class Lexer {
         }
         
         return checkOK
+    }
+    
+    public func variableOrdering() -> [String:Int] {
+        
+        var answer = [String:Int]()
+        var index = 0
+        
+        for token in tokens {
+            if token.type == .text {
+                if answer[token.content] == nil {
+                    index += 1
+                    answer[token.content] = index
+                }
+            }
+        }
+        
+        return answer
+    }
+    
+    // Each unique token.text has to turn up in orderDict
+    // Each variable (key) in orderDict has to be in tokens as well
+    public func checkOrdering() -> Bool {
+        
+        var answer = true
+        
+        // Each unique token.text has to turn up in orderDict
+        for token in tokens {
+            if token.type == .text {
+                if orderDict[token.content] == nil {
+                    answer = false
+                }
+            }
+        }
+        // Each variable (key) in orderDict has to be in tokens
+        for variable in orderDict.keys {
+            var found = false
+            for token in tokens {
+                if token.type == .text {
+                    if token.content == variable {
+                        found = true
+                    }
+                }
+            }
+            if found == false {
+                answer = false
+            }
+        }
+        print("variable answer \(answer)")
+        return answer
     }
     
 }
