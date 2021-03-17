@@ -135,8 +135,8 @@ class LexerTests: XCTestCase {
         let opOr = "\u{2228}"
         let opNot = "\u{00AC}"
         
-        // not (not(x or not y) and z) or x)
-        let source = opNot + "( " + opNot + "(x " + opOr + opNot + " y) " + opAnd + " z)" + opOr + " x)"
+        // not (not(y or not x) and z) or x)
+        let source = opNot + "( " + opNot + "(y " + opOr + opNot + " x) " + opAnd + " z)" + opOr + " x)"
         let lexer = Lexer(source: source)
         
         let expectedOrdering: [String:Int] = ["x": 1, "y": 2, "z": 3]

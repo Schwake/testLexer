@@ -111,6 +111,7 @@ public final class Lexer {
         
         var answer = [String:Int]()
         var index = 0
+        var sortedNames: [String]
         
         for token in tokens {
             if token.type == .text {
@@ -119,6 +120,14 @@ public final class Lexer {
                     answer[token.content] = index
                 }
             }
+        }
+        
+        sortedNames = Array(answer.keys).sorted()
+        answer = [String:Int]()
+        
+        for (index, value) in sortedNames.enumerated() {
+            let orderIndex = index + 1
+            answer[value] = orderIndex
         }
         
         return answer
@@ -152,7 +161,7 @@ public final class Lexer {
                 answer = false
             }
         }
-        print("variable answer \(answer)")
+        
         return answer
     }
     
