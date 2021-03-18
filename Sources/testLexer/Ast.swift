@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class Ast {
+public class Ast {
     
     var rootNode: AstNode?
     let lexer: Lexer

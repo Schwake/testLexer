@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class Lexer {
+public class Lexer {
     
     // Basic variables
     public let source: String
