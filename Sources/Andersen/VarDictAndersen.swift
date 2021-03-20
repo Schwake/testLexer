@@ -15,6 +15,21 @@ public class VarDictAndersen {
         varDict = [String: Int]()
     }
     
+    public func existsNodeFor(varIndex: Int, lowIndex: Int, highIndex: Int) -> (exists: Bool, node: Int?) {
+        let aKey = ("\(varIndex) \(lowIndex) \(highIndex)")
+        
+        if let aNode = varDict[aKey] {
+            return (true, aNode)
+        } else {
+            return (false)
+        }
+        
+    }
     
+    public func addNode(nodeIndex: Int, varIndex: Int, lowIndex: Int, highIndex: Int) {
+
+        let aKey = ("\(varIndex) \(lowIndex) \(highIndex)")
+        varDict[aKey] = nodeIndex
+    }
     
 }
