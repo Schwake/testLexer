@@ -37,4 +37,8 @@ public class BddAndersen {
             return nodeIndex
         }
     }
+    
+    public func build() {
+        if 
+    }
 }
