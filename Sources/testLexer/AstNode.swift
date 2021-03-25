@@ -111,6 +111,19 @@ public class AstNode {
         return succ != nil
     }
     
+    // Next node is either successor and if not found bottom, otherwise nil
+    public func next() -> AstNode? {
+        
+        if hasSucc() {
+            return succ
+        } else {
+            if hasBottom() {
+                return bottom
+            }
+        }
+        
+        return nil
+    }
     
     public func contentTo(string: String) -> String {
         var answer = string
