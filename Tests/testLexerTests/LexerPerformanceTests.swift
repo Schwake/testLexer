@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import testLexer
+@testable import testLexer
 
 class LexerPerformanceTests: XCTestCase {
 
@@ -114,5 +114,31 @@ class LexerPerformanceTests: XCTestCase {
             Ast(lexer: lexer)
         }
     }
+    
+    func testBddAndersonPerformance() {
+        
+        let opAnd = "\u{2227}"
+        let opOr = "\u{2228}"
+        
+        var source = ""
+        // x1 or x2
+        for index in (1...10) {
+            source += "x\(index) " + opAnd + " y\(index) " + opOr
+        }
+        source = source + " z1"
+        let lexer = Lexer(source: source)
+        let varOrdering = lexer.variableOrdering()
+        let ast = Ast(lexer: lexer)
+        let rootNode = ast.rootNode!
+        
+        let aBddAndersen = BddAndersen(variableOrdering: varOrdering)
+        
+        measure {
+            aBddAndersen.build(node: rootNode)
+        }
+       
+       
+    }
 
+    
 }

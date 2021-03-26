@@ -9,7 +9,7 @@ import Foundation
 
 public class Ast {
     
-    var rootNode: AstNode?
+    public var rootNode: AstNode?
     let lexer: Lexer
     
     

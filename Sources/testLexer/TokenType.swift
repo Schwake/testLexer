@@ -13,5 +13,4 @@ public enum TokenType {
     case not
     case op
     case text
-    
 }

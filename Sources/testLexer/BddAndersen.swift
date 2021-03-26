@@ -23,6 +23,67 @@ public class BddAndersen {
     }
     
     
+    public func build(node: AstNode) -> Int {
+        
+        let currNode = node
+        let currVar = node.content()
+        let currNodeVarIndex = orderDict[currVar]!
+        
+        let opNode = currNode.next()
+        let op = opNode!.token.content
+        
+        let nextNode = opNode!.next()
+        let low = build(node: nextNode!, op: op, boolValue: false)
+        let high = build(node: nextNode!, op: op, boolValue: true)
+        
+        return make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
+        
+    }
+    
+    public func build(node: AstNode, op: String, boolValue: Bool) -> Int {
+        var op = op
+        let currNode = node
+        let currVar = node.content()
+        let currNodeVarIndex = orderDict[currVar]
+        if currNode.isFinal() {
+            var low: Int
+            var high: Int
+            let lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
+            let highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
+            if lowCalc { low = 1 } else { low = 0 }
+            if highCalc { high = 1 } else { high = 0 }
+            return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+        }
+        
+        let opNode = currNode.next()
+        op = opNode!.token.content
+        
+        let nextNode = opNode!.next()
+        let low = build(node: nextNode!, op: op, boolValue: false)
+        let high = build(node: nextNode!, op: op, boolValue: true)
+        
+        return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+        
+    }
+    
+    
+    public func calculate(op: String, firstBool: Bool, secBool: Bool) -> Bool {
+        
+        let op = op
+        switch op {
+            // And
+            case "\u{2227}":
+                return firstBool && secBool
+            // Or
+            case "\u{2228}":
+                return firstBool || secBool
+        default:
+            return false
+        }
+     
+    }
+    
+    
     public func make(varIndex: Int, lowIndex: Int, highIndex: Int) -> Int {
         
         guard (lowIndex != highIndex) else {

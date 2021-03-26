@@ -89,4 +89,84 @@ class BddAndersenTests: XCTestCase {
         XCTAssert(secondEntry == 2)
     }
     
+    
+    func testBuildOr() {
+        
+        let opOr = "\u{2228}"
+        
+        // x1 or x2
+        let source = "x1 " + opOr + " x2"
+        let lexer = Lexer(source: source)
+        let varOrdering = lexer.variableOrdering()
+        let ast = Ast(lexer: lexer)
+        let rootNode = ast.rootNode!
+        
+        let aBddAndersen = BddAndersen(variableOrdering: varOrdering)
+        
+        aBddAndersen.build(node: rootNode)
+        
+        XCTAssert(aBddAndersen.nodeDict[3] == [1, 2, 1])
+        XCTAssert(aBddAndersen.nodeDict[1] == [])
+        XCTAssert(aBddAndersen.nodeDict[0] == [])
+        XCTAssert(aBddAndersen.nodeDict[2] == [2, 0, 1])
+        XCTAssert(aBddAndersen.nodeDict.count == 4)
+        
+        XCTAssert(aBddAndersen.varDict["2 0 1"] == 2)
+        XCTAssert(aBddAndersen.varDict["1 2 1"] == 3)
+        XCTAssert(aBddAndersen.varDict.count == 2)
+    }
+    
+    
+    func testBuildAnd() {
+        
+        let opAnd = "\u{2227}"
+        
+        // x1 or x2
+        let source = "x1 " + opAnd + " x2"
+        let lexer = Lexer(source: source)
+        let varOrdering = lexer.variableOrdering()
+        let ast = Ast(lexer: lexer)
+        let rootNode = ast.rootNode!
+        
+        let aBddAndersen = BddAndersen(variableOrdering: varOrdering)
+        
+        aBddAndersen.build(node: rootNode)
+        
+        XCTAssert(aBddAndersen.nodeDict[3] == [1, 0, 2])
+        XCTAssert(aBddAndersen.nodeDict[1] == [])
+        XCTAssert(aBddAndersen.nodeDict[0] == [])
+        XCTAssert(aBddAndersen.nodeDict[2] == [2, 0, 1])
+        XCTAssert(aBddAndersen.nodeDict.count == 4)
+        
+        XCTAssert(aBddAndersen.varDict["2 0 1"] == 2)
+        XCTAssert(aBddAndersen.varDict["1 0 2"] == 3)
+        XCTAssert(aBddAndersen.varDict.count == 2)
+    }
+    
+    func testBuildTest() {
+        
+        let opAnd = "\u{2227}"
+        
+        // x1 or x2
+        let source = "x1 " + opAnd + " x2"
+        let lexer = Lexer(source: source)
+        let varOrdering = lexer.variableOrdering()
+        let ast = Ast(lexer: lexer)
+        let rootNode = ast.rootNode!
+        
+        let aBddAndersen = BddAndersen(variableOrdering: varOrdering)
+        
+        aBddAndersen.build(node: rootNode)
+        
+        XCTAssert(aBddAndersen.nodeDict[3] == [1, 0, 2])
+        XCTAssert(aBddAndersen.nodeDict[1] == [])
+        XCTAssert(aBddAndersen.nodeDict[0] == [])
+        XCTAssert(aBddAndersen.nodeDict[2] == [2, 0, 1])
+        XCTAssert(aBddAndersen.nodeDict.count == 4)
+        
+        XCTAssert(aBddAndersen.varDict["2 0 1"] == 2)
+        XCTAssert(aBddAndersen.varDict["1 0 2"] == 3)
+        XCTAssert(aBddAndersen.varDict.count == 2)
+    }
+    
 }
