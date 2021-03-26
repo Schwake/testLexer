@@ -9,9 +9,9 @@ import Foundation
 
 public class BddAndersen {
     
-    var orderDict: [String: Int]
-    var nodeDict = [Int: [Int]]()
-    var varDict: [String: Int]
+    public var orderDict: [String: Int]
+    public var nodeDict = [Int: [Int]]()
+    public var varDict: [String: Int]
     
     
     init(variableOrdering: [String: Int]) {
@@ -33,16 +33,16 @@ public class BddAndersen {
         if answer.exists {
             return answer.node!
         } else {
-            let nodeIndex = addNodeDict(varIndex: varIndex, lowIndex: lowIndex, highIndex: highIndex)
+            let nodeIndex = nodeDictAddNode(varIndex: varIndex, lowIndex: lowIndex, highIndex: highIndex)
             varDictAddNode(nodeIndex: nodeIndex, varIndex: varIndex, lowIndex: lowIndex, highIndex: highIndex)
             return nodeIndex
         }
     }
     
     
-    public func addNodeDict(varIndex: Int, lowIndex: Int, highIndex: Int) -> Int {
+    public func nodeDictAddNode(varIndex: Int, lowIndex: Int, highIndex: Int) -> Int {
         
-        let nodeIndex = nodeDict.keys.count + 1
+        let nodeIndex = nodeDict.keys.count
         nodeDict[nodeIndex] = [varIndex, lowIndex, highIndex]
         
         return nodeIndex
