@@ -45,7 +45,7 @@ public class BddAndersen {
         let currNode = node
         let currVar = node.content()
         let currNodeVarIndex = orderDict[currVar]
-        if currNode.isFinal() {
+        if (currNodeVarIndex == orderDict.keys.count) {
             var low: Int
             var high: Int
             let lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
