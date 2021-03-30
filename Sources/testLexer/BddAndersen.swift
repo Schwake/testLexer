@@ -35,35 +35,42 @@ public class BddAndersen {
         let nextNode = opNode!.next()
         let low = build(node: nextNode!, op: op, boolValue: false)
         let high = build(node: nextNode!, op: op, boolValue: true)
-        
+       
         return make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
         
     }
     
     public func build(node: AstNode, op: String, boolValue: Bool) -> Int {
-        var op = op
+        var firstOp = op
         let currNode = node
         let currVar = node.content()
         let currNodeVarIndex = orderDict[currVar]
+        
         if (currNodeVarIndex == orderDict.keys.count) {
+            
             var low: Int
             var high: Int
-            let lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
-            let highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
+            let lowCalc = calculate(op: firstOp, firstBool: boolValue, secBool: false)
+            let highCalc = calculate(op: firstOp, firstBool: boolValue, secBool: true)
             if lowCalc { low = 1 } else { low = 0 }
             if highCalc { high = 1 } else { high = 0 }
+            
+            return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+            
+        } else {
+            
+            let opNode = currNode.next()
+            let secondOp = opNode!.token.content
+            let nextNode = opNode!.next()
+            var low = build(node: nextNode!, op: secondOp, boolValue: false)
+            var high = build(node: nextNode!, op: secondOp, boolValue: true)
+            let lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
+            let highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
+            if lowCalc { low = high }
+            if !highCalc { high = low }
+           
             return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
         }
-        
-        let opNode = currNode.next()
-        op = opNode!.token.content
-        
-        let nextNode = opNode!.next()
-        let low = build(node: nextNode!, op: op, boolValue: false)
-        let high = build(node: nextNode!, op: op, boolValue: true)
-        
-        return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
-        
     }
     
     

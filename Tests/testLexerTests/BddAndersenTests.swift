@@ -167,11 +167,11 @@ class BddAndersenTests: XCTestCase {
         XCTAssert(aBddAndersen.nodeDict[1] == [])
         XCTAssert(aBddAndersen.nodeDict[0] == [])
         XCTAssert(aBddAndersen.nodeDict[2] == [3, 0, 1])
-        XCTAssert(aBddAndersen.nodeDict.count == 4)
+        XCTAssert(aBddAndersen.nodeDict.count == 5)
  
         XCTAssert(aBddAndersen.varDict["1 3 2"] == 4)
         XCTAssert(aBddAndersen.varDict["2 0 2"] == 3)
-        XCTAssert(aBddAndersen.varDict["1 0 2"] == 2)
+        XCTAssert(aBddAndersen.varDict["3 0 1"] == 2)
         XCTAssert(aBddAndersen.varDict.count == 3)
     }
     
