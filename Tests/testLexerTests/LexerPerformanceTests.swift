@@ -121,7 +121,7 @@ class LexerPerformanceTests: XCTestCase {
         let opOr = "\u{2228}"
         
         var source = ""
-        // x and y or x and y ... and z (21 pow 2 operations
+        // x and y or x and y ... and z (21 pow 2 operations)
         for index in (1...10) {
             source += "x\(index) " + opAnd + " y\(index) " + opOr
         }

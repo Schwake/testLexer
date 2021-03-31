@@ -174,6 +174,41 @@ class BddAndersenTests: XCTestCase {
         XCTAssert(aBddAndersen.varDict["3 0 1"] == 2)
         XCTAssert(aBddAndersen.varDict.count == 3)
     }
+
+    
+    func testBuildNot() {
+        
+        let opOr = "\u{2228}"
+        let opAnd = "\u{2227}"
+        let isNot = "\u{00AC}"
+        
+        // not x1 or x2 and x3
+        let source = isNot + " x1 " + opOr + " x2 " + opAnd + " x3"
+        let lexer = Lexer(source: source)
+        let varOrdering = lexer.variableOrdering()
+        let ast = Ast(lexer: lexer)
+        let rootNode = ast.rootNode!
+        
+        let aBddAndersen = BddAndersen(variableOrdering: varOrdering)
+        
+        aBddAndersen.build(node: rootNode)
+        
+        //dump(aBddAndersen.nodeDict)
+        //dump(aBddAndersen.varDict)
+        
+        XCTAssert(aBddAndersen.nodeDict[4] == [1, 2, 3])
+        XCTAssert(aBddAndersen.nodeDict[3] == [2, 0, 2])
+        XCTAssert(aBddAndersen.nodeDict[1] == [])
+        XCTAssert(aBddAndersen.nodeDict[0] == [])
+        XCTAssert(aBddAndersen.nodeDict[2] == [3, 0, 1])
+        XCTAssert(aBddAndersen.nodeDict.count == 5)
+ 
+        XCTAssert(aBddAndersen.varDict["1 2 3"] == 4)
+        XCTAssert(aBddAndersen.varDict["2 0 2"] == 3)
+        XCTAssert(aBddAndersen.varDict["3 0 1"] == 2)
+        XCTAssert(aBddAndersen.varDict.count == 3)
+    }
+
     
     func testBuildTest() {
         

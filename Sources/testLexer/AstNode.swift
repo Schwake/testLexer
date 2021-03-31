@@ -86,6 +86,17 @@ public class AstNode {
         return tokenType() == .op
     }
     
+    
+    public func isAnd() -> Bool {
+        return token.content == "\u{2227}"
+    }
+    
+    
+    public func isOr() -> Bool {
+        return token.content == "\u{2228}"
+    }
+    
+    
     public func hasTopNot() -> Bool {
         if  hasTop() {
             if top!.isNot() {
@@ -150,16 +161,7 @@ public class AstNode {
         return answer
     }
     
-    
-    public func isAnd() -> Bool {
-        return token.content == "\u{2227}"
-    }
-    
-    
-    public func isOr() -> Bool {
-        return token.content == "\u{2228}"
-    }
-    
+  
     public func printStructure(string: String, index: Int) {
 
         let index = index + 1

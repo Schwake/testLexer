@@ -25,7 +25,13 @@ public class BddAndersen {
     
     public func build(node: AstNode) -> Int {
         
-        let currNode = node
+        var currNode = node
+        var isNegation = node.isNot()
+        
+        if isNegation {
+            currNode = node.next()!
+        }
+  
         let currVar = node.content()
         let currNodeVarIndex = orderDict[currVar]!
         
@@ -36,14 +42,26 @@ public class BddAndersen {
         let low = build(node: nextNode!, op: op, boolValue: false)
         let high = build(node: nextNode!, op: op, boolValue: true)
        
-        return make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
+        if isNegation {
+            return make(varIndex: currNodeVarIndex, lowIndex: high, highIndex: low)
+        } else {
+            return make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
+        }
         
     }
     
     public func build(node: AstNode, op: String, boolValue: Bool) -> Int {
+        let answer: Int
+        var isNegation = node.isNot()
+        var currNode = node
+        
         var firstOp = op
-        let currNode = node
-        let currVar = node.content()
+        
+        if isNegation {
+            let currNode = node.next()!
+        }
+        
+        let currVar = currNode.content()
         let currNodeVarIndex = orderDict[currVar]
         
         if (currNodeVarIndex == orderDict.keys.count) {
@@ -55,22 +73,29 @@ public class BddAndersen {
             if lowCalc { low = 1 } else { low = 0 }
             if highCalc { high = 1 } else { high = 0 }
             
-            return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
-            
+            if isNegation {
+                answer = make(varIndex: currNodeVarIndex!, lowIndex: high, highIndex: low)
+            } else {
+                answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+            }
         } else {
-            
             let opNode = currNode.next()
             let secondOp = opNode!.token.content
             let nextNode = opNode!.next()
             var low = build(node: nextNode!, op: secondOp, boolValue: false)
             var high = build(node: nextNode!, op: secondOp, boolValue: true)
-            let lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
-            let highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
+            var lowCalc = calculate(op: op, firstBool: boolValue, secBool: false)
+            var highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
             if lowCalc { low = high }
             if !highCalc { high = low }
            
-            return make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+            if isNegation {
+                answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+            } else {
+                answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+            }
         }
+        return answer
     }
     
     
