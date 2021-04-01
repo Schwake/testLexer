@@ -125,11 +125,11 @@ public class AstNode {
     // Next node is either successor and if not found bottom, otherwise nil
     public func next() -> AstNode? {
         
-        if hasSucc() {
-            return succ
+        if hasBottom() {
+            return bottom
         } else {
-            if hasBottom() {
-                return bottom
+            if hasSucc() {
+                return succ
             }
         }
         

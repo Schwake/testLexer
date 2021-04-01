@@ -27,7 +27,8 @@ public class BddAndersen {
         
         let answer: Int
         var currNode = node
-        var isNegation = node.isNot()
+        
+        let isNegation = node.isNot()
         
         if isNegation {
             currNode = node.next()!
@@ -71,7 +72,7 @@ public class BddAndersen {
         let currVar = currNode.content()
         let currNodeVarIndex = orderDict[currVar]
         
-        if (currNodeVarIndex == orderDict.keys.count) {
+        if (currNode.isFinal()) {
             
             var low: Int
             var high: Int
