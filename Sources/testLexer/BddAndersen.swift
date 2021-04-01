@@ -25,6 +25,7 @@ public class BddAndersen {
     
     public func build(node: AstNode) -> Int {
         
+        let answer: Int
         var currNode = node
         var isNegation = node.isNot()
         
@@ -32,7 +33,7 @@ public class BddAndersen {
             currNode = node.next()!
         }
   
-        let currVar = node.content()
+        let currVar = currNode.content()
         let currNodeVarIndex = orderDict[currVar]!
         
         let opNode = currNode.next()
@@ -41,13 +42,19 @@ public class BddAndersen {
         let nextNode = opNode!.next()
         let low = build(node: nextNode!, op: op, boolValue: false)
         let high = build(node: nextNode!, op: op, boolValue: true)
-       
+        
         if isNegation {
-            return make(varIndex: currNodeVarIndex, lowIndex: high, highIndex: low)
+            if node.next()!.isLParen() {
+                answer = make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
+                self.negateBdd()
+            } else {
+                answer = make(varIndex: currNodeVarIndex, lowIndex: high, highIndex: low)
+            }
         } else {
-            return make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
+            answer = make(varIndex: currNodeVarIndex, lowIndex: low, highIndex: high)
         }
         
+        return answer
     }
     
     public func build(node: AstNode, op: String, boolValue: Bool) -> Int {
@@ -72,13 +79,20 @@ public class BddAndersen {
             let highCalc = calculate(op: firstOp, firstBool: boolValue, secBool: true)
             if lowCalc { low = 1 } else { low = 0 }
             if highCalc { high = 1 } else { high = 0 }
-            
+           
             if isNegation {
-                answer = make(varIndex: currNodeVarIndex!, lowIndex: high, highIndex: low)
+                if node.next()!.isLParen() {
+                    answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+                    negateBdd()
+                } else {
+                    answer = make(varIndex: currNodeVarIndex!, lowIndex: high, highIndex: low)
+                }
             } else {
                 answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
             }
+            
         } else {
+            
             let opNode = currNode.next()
             let secondOp = opNode!.token.content
             let nextNode = opNode!.next()
@@ -88,9 +102,14 @@ public class BddAndersen {
             var highCalc = calculate(op: op, firstBool: boolValue, secBool: true)
             if lowCalc { low = high }
             if !highCalc { high = low }
-           
+            
             if isNegation {
-                answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+                if node.next()!.isLParen() {
+                    answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
+                    negateBdd()
+                } else {
+                    answer = make(varIndex: currNodeVarIndex!, lowIndex: high, highIndex: low)
+                }
             } else {
                 answer = make(varIndex: currNodeVarIndex!, lowIndex: low, highIndex: high)
             }
@@ -166,5 +185,39 @@ public class BddAndersen {
         varDict[aKey] = nodeIndex
     }
     
+    
+    // Answer the highest node number
+    public func topNode() -> Int {
+        
+        return nodeDict.keys.max()!
+    }
+    
+    // Exchange constants 0 and 1
+    // Has to be done in nodeDict and in varDict
+    public func negateBdd() {
+        
+        var newVarDict = [String: Int]()
+        
+        for index in 0..<nodeDict.count {
+            if index > 1 {
+                if nodeDict[index]![1] == 0 { nodeDict[index]![1] = 1}
+                if nodeDict[index]![1] == 1 { nodeDict[index]![1] = 0}
+                if nodeDict[index]![2] == 0 { nodeDict[index]![2] = 1}
+                if nodeDict[index]![2] == 1 { nodeDict[index]![2] = 0}
+            }
+        }
+        
+        for (key, value) in nodeDict {
+            var aString = ""
+            for item in  value {
+                aString += "\(item) "
+            }
+            aString = aString.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            newVarDict[aString] = key
+        }
+        
+        varDict = newVarDict
+    }
 
 }

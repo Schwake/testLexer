@@ -193,8 +193,8 @@ class BddAndersenTests: XCTestCase {
         
         aBddAndersen.build(node: rootNode)
         
-        //dump(aBddAndersen.nodeDict)
-        //dump(aBddAndersen.varDict)
+        dump(aBddAndersen.nodeDict)
+        dump(aBddAndersen.varDict)
         
         XCTAssert(aBddAndersen.nodeDict[4] == [1, 2, 3])
         XCTAssert(aBddAndersen.nodeDict[3] == [2, 0, 2])
